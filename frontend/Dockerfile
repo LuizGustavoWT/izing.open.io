@@ -4,12 +4,16 @@ WORKDIR /front
 
 COPY package*.json ./
 
+RUN npm install --force
+
 RUN npm i -g @quasar/cli
 
-RUN npm install
+RUN npx update-browserslist-db@latest
 
 COPY . . 
 
-RUN quasar build -P -m pwa
+RUN npm run build
 
-CMD ["quasar", "run", "serve"]
+COPY docker-entrypoint.sh .
+RUN chmod +x docker-entrypoint.sh
+ENTRYPOINT ["./docker-entrypoint.sh"]
