@@ -13,12 +13,11 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 ENV NODE_ENV=dev
 ENV CHROME_BIN=google-chrome-stable
 
-COPY package.json .
-
-COPY . .
+COPY ./package.json ./
 
 RUN npm install --force
 
+COPY . .
 
 RUN npm run build
 
