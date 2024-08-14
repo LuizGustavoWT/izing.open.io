@@ -1,7 +1,9 @@
 FROM node:18-bookworm-slim as global-deps-stage
 
-WORKDIR /
+# Definindo o diretório de trabalho
+WORKDIR /app
 
+# Instalar dependências globais
 RUN apt-get update \
   && apt-get install -y wget gnupg nano ffmpeg \
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -11,18 +13,24 @@ RUN apt-get update \
   --no-install-recommends \
   && rm -rf /var/lib/apt/lists/* && npm install pm2@latest -g
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV NODE_ENV=dev
 ENV CHROME_BIN=google-chrome-stable
 
-COPY ./package.json ./
+# Copiar apenas package.json e package-lock.json (se existir)
+COPY package*.json ./
 
+# Instalar dependências do projeto
 RUN npm install --force
 
+# Copiar os arquivos restantes
 COPY . .
 
+# Construir o projeto
 RUN npm run build
 
+# Preparar o script de entrada
 COPY docker-entrypoint.sh .
 RUN chmod +x docker-entrypoint.sh
+
 ENTRYPOINT ["./docker-entrypoint.sh"]
