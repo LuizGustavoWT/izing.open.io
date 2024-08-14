@@ -1,4 +1,4 @@
-FROM node:18-lts
+FROM node:18-alpine
 
 WORKDIR /front
 
