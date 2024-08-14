@@ -58,7 +58,7 @@
     "workbox-webpack-plugin": "^6.6.0"
   },
   "scripts": {
-    "start": "pm2 start server.js --name izing-frontend",
+    "start": "node ./server.js",
     "stop": "pm2 stop server.js --name izing-frontend",
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && npx quasar build -P -m pwa"
   },
