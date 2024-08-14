@@ -12,23 +12,9 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* && npm install pm2@latest -g
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-ENV NODE_ENV=dev
+
 ENV CHROME_BIN=google-chrome-stable
 
-FROM global-deps-stage as develop-stage
-COPY package*.json ./
-RUN npm install
-
-FROM develop-stage as build-stage
-COPY . .
-RUN npm run build
-
-FROM build-stage as development-stage
-ENV NODE_ENV=development
-ENTRYPOINT ["npm", "run", "dev:server"]
-
-FROM build-stage as production-stage
-ENV NODE_ENV=production
 COPY docker-entrypoint.sh .
 RUN chmod +x docker-entrypoint.sh
 ENTRYPOINT ["./docker-entrypoint.sh"]
