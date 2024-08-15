@@ -28,6 +28,10 @@ COPY . .
 # Construir o projeto
 RUN npm run build
 
+RUN sequelize db:migrate
+
+RUN sequelize db:seed:all
+
 # Preparar o script de entrada
 COPY docker-entrypoint.sh .
 RUN chmod +x docker-entrypoint.sh
