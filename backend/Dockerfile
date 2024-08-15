@@ -1,7 +1,4 @@
-FROM node:18-bookworm-slim as global-deps-stage
-
-# Definindo o diretório de trabalho
-WORKDIR /app
+FROM node:20-bookworm-slim
 
 # Instalar dependências globais
 RUN apt-get update \
@@ -11,17 +8,19 @@ RUN apt-get update \
   && apt-get update \
   && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
   --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/* && npm install pm2@latest -g
+  && rm -rf /var/lib/apt/lists/*
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV NODE_ENV=dev
+
 ENV CHROME_BIN=google-chrome-stable
 
+
+WORKDIR /app
 # Copiar apenas package.json e package-lock.json (se existir)
-COPY package*.json ./
+COPY ./package*.json ./
 
 # Instalar dependências do projeto
-RUN npm install --force
+RUN npm install
 
 # Copiar os arquivos restantes
 COPY . .
